@@ -1,5 +1,5 @@
 /*
- * AbstractLinuxPropertiesLocator.java from TeamCityPlugins modified Friday, September 7, 2012 16:54:03 CDT (-0500).
+ * AbstractLinuxPropertiesLocator.java from TeamCityPlugins modified Wednesday, September 12, 2012 17:29:20 CDT (-0500).
  *
  * Copyright 2010-2012 the original author or authors.
  *
@@ -50,7 +50,7 @@ public abstract class AbstractLinuxPropertiesLocator implements LinuxPropertiesL
 		return properties;
 	}
 
-	protected final void determinePluginVersion(File pluginRoot, Map<String, String> properties)
+	private void determinePluginVersion(File pluginRoot, Map<String, String> properties)
 	{
 		File versionFile = new File(pluginRoot, "version.properties");
 		if(versionFile.exists())
@@ -61,10 +61,13 @@ public abstract class AbstractLinuxPropertiesLocator implements LinuxPropertiesL
 				try
 				{
 					versionProperties.load(FileUtils.openInputStream(versionFile));
-					properties.put(
-							LinuxPropertiesLocator.PLUGIN_VERSION_KEY,
-							versionProperties.getProperty(LinuxPropertiesLocator.PLUGIN_VERSION_KEY)
-					);
+					if(versionProperties.getProperty(LinuxPropertiesLocator.PLUGIN_VERSION_KEY) != null)
+					{
+						properties.put(
+								LinuxPropertiesLocator.PLUGIN_VERSION_KEY,
+								versionProperties.getProperty(LinuxPropertiesLocator.PLUGIN_VERSION_KEY)
+						);
+					}
 				}
 				catch(IOException e)
 				{
