@@ -1,0 +1,36 @@
+<component name="ArtifactManager">
+  <artifact name="LinuxSystemProperties:zip">
+    <output-path>$PROJECT_DIR$/out/artifacts/LinuxSystemProperties</output-path>
+    <root id="root">
+      <element id="archive" name="linux-system-properties.zip">
+        <element id="directory" name="agent">
+          <element id="archive" name="linux-system-properties.zip">
+            <element id="directory" name="linux-system-properties">
+              <element id="archive" name="linux-system-properties.jar">
+                <element id="directory" name="META-INF">
+                  <element id="file-copy" path="$PROJECT_DIR$/LinuxSystemProperties/resources/build-agent-plugin-linux-system-properties.xml" />
+                  <element id="file-copy" path="$PROJECT_DIR$/LinuxSystemProperties/resources/MANIFEST.MF" />
+                </element>
+                <element id="module-output" name="LinuxSystemProperties" />
+              </element>
+              <element id="file-copy" path="$PROJECT_DIR$/LinuxSystemProperties/resources/version.properties" />
+            </element>
+          </element>
+        </element>
+        <element id="directory" name="server">
+          <element id="archive" name="linux-system-properties.jar">
+            <element id="directory" name="META-INF">
+              <element id="file-copy" path="$PROJECT_DIR$/LinuxSystemProperties/resources/build-server-plugin-linux-system-properties.xml" />
+              <element id="file-copy" path="$PROJECT_DIR$/LinuxSystemProperties/resources/MANIFEST.MF" />
+            </element>
+            <element id="module-output" name="LinuxSystemProperties" />
+          </element>
+        </element>
+        <element id="file-copy" path="$PROJECT_DIR$/LinuxSystemProperties/resources/teamcity-plugin.xml" />
+        <element id="file-copy" path="$PROJECT_DIR$/LinuxSystemProperties/resources/version.properties" />
+        <element id="file-copy" path="$PROJECT_DIR$/LinuxSystemProperties/resources/LICENSE.txt" />
+        <element id="file-copy" path="$PROJECT_DIR$/LinuxSystemProperties/resources/NOTICE.txt" />
+      </element>
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,26 @@
+<component name="ArtifactManager">
+  <artifact name="SharedBuildNumber:zip">
+    <output-path>$PROJECT_DIR$/out/artifacts/SharedBuildNumber</output-path>
+    <root id="root">
+      <element id="archive" name="shared-build-number.zip">
+        <element id="directory" name="server">
+          <element id="archive" name="shared-build-number.jar">
+            <element id="directory" name="META-INF">
+              <element id="file-copy" path="$PROJECT_DIR$/SharedBuildNumber/resources/MANIFEST.MF" />
+              <element id="file-copy" path="$PROJECT_DIR$/SharedBuildNumber/resources/build-server-plugin-shared-build-number.xml" />
+            </element>
+            <element id="module-output" name="SharedBuildNumber" />
+            <element id="directory" name="buildServerResources">
+              <element id="dir-copy" path="$PROJECT_DIR$/SharedBuildNumber/resources/buildServerResources" />
+            </element>
+          </element>
+          <element id="dir-copy" path="$PROJECT_DIR$/SharedBuildNumber/libraries/compile" />
+          <element id="dir-copy" path="$PROJECT_DIR$/SharedBuildNumber/libraries/runtime" />
+        </element>
+        <element id="file-copy" path="$PROJECT_DIR$/SharedBuildNumber/resources/teamcity-plugin.xml" />
+        <element id="file-copy" path="$PROJECT_DIR$/SharedBuildNumber/resources/LICENSE.txt" />
+        <element id="file-copy" path="$PROJECT_DIR$/SharedBuildNumber/resources/NOTICE.txt" />
+      </element>
+    </root>
+  </artifact>
+</component>

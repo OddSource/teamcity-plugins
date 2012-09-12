@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ shared-build-number-config-1.0.xsd from TeamCityPlugins modified Saturday, September 8, 2012 08:15:09 CDT (-0500).
+  ~
+  ~ Copyright 2010-2012 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<xsd:schema version="1.0"
+			xmlns="http://java.nicholaswilliams.net/schema/teamcity/plugin/shared-build-number-config"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://java.nicholaswilliams.net/schema/teamcity/plugin/shared-build-number-config"
+			elementFormDefault="qualified">
+
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+
+	<xsd:annotation>
+		<xsd:appinfo>Advanced Shared Build Number TeamCity Plugin Configuration</xsd:appinfo>
+		<xsd:documentation><![CDATA[
+	This XML Schema Document specifies the format of the shared-build-number-config.xml file. The XML file is used for
+	persisting general plugin settings and definitions for all of the shared build numbers.
+		]]></xsd:documentation>
+	</xsd:annotation>
+	
+	<xsd:element name="shared-build-number-config" type="sharedBuildNumberConfig" />
+	<xsd:complexType name="sharedBuildNumberConfig">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[
+	The root element shared-build-number-config contains everything in this document. It must contain exactly three
+	elements: last-update, settings and build-numbers in that order.
+			]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="last-update" type="xsd:dateTime" minOccurs="1" maxOccurs="1" />
+			<xsd:element name="settings" type="settingCollection" minOccurs="1" maxOccurs="1" />
+			<xsd:element name="build-numbers" type="buildNumberCollection" minOccurs="1" maxOccurs="1" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="settingCollection">
+		<xsd:sequence>
+			<xsd:element name="buildNumberIdSequence" type="xsd:positiveInteger" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+	This setting holds the sequence for shared build number IDs. It should be read, updated and persisted atomically in
+	a thread-safe manner, so that no two build numbers should have the same ID. The build number attribute ID should
+	only come from this sequence.
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="buildNumberCollection">
+		<xsd:sequence>
+			<xsd:element name="build-number" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="name" minOccurs="1" maxOccurs="1">
+							<xsd:annotation>
+								<xsd:documentation><![CDATA[
+	The name of the build must be at least five characters long and no more than 60 characters long. It identifies the
+	build number in the list of build numbers.
+								]]></xsd:documentation>
+							</xsd:annotation>
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:minLength value="5" />
+									<xsd:maxLength value="60" />
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name="description" type="xsd:string" minOccurs="1" maxOccurs="1">
+							<xsd:annotation>
+								<xsd:documentation><![CDATA[
+	The description of the build can be left blank or it can be unlimited length. It is only displayed on the details
+	page.
+								]]></xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="format" minOccurs="1" maxOccurs="1">
+							<xsd:annotation>
+								<xsd:documentation><![CDATA[
+	This specifies the build number format, and must be provided. It can have two placeholders in it. {0} will be
+	replaced by the build counter (element `counter`). {d} will be replaced by the curret date and/or time based on the
+	`dateFormat` element.
+
+	If {d} is used, the `dateFormat` element MUST be specified. Either {0} OR {d} OR both must be used. However, if {d}
+	is used and `dateFormat` does NOT include ALL of the year, month, day, hour, minute AND second, {0} MUST also be
+	used; otherwise, it would be quite easy for two builds to have the same build number.
+								]]></xsd:documentation>
+							</xsd:annotation>
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:minLength value="3" />
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name="dateFormat" minOccurs="0" maxOccurs="1">
+							<xsd:annotation>
+								<xsd:documentation><![CDATA[
+	This is the format with which the date should be formatted if {d} is used in the `format` element (see the
+	documentation above). The format should meet the date format specification at
+	http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html.
+								]]></xsd:documentation>
+							</xsd:annotation>
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:minLength value="3" />
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name="counter" type="xsd:positiveInteger" minOccurs="1" maxOccurs="1">
+							<xsd:annotation>
+								<xsd:documentation><![CDATA[
+	This is the build counter. It is incremented every time a build (or build chain, if `incrementOnceForChain` is
+	true) is started. It is incremented even if {0} is not used in the build number format. It can be manually
+	increased, but it would be unwise to manually decrease it, as this could result in duplicate build numbers.
+								]]></xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+					<xsd:attribute name="id" type="xsd:positiveInteger" use="required">
+						<xsd:annotation>
+							<xsd:documentation><![CDATA[
+	The unique identifier for this shared build number. It should be derived from the buildNumberIdSequence setting,
+	and no two build numbers should ever have the same ID.
+							]]></xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="incrementOnceForChain" type="xsd:boolean" use="optional" default="false">
+						<xsd:annotation>
+							<xsd:documentation><![CDATA[
+	If true, and a build chain is started whereby all of the builds share the same build number, the build number will
+	be the same for all builds in the chain. This defaults to false. NOTE THAT THIS FEATURE IS NOT CURRENTLY SUPPORTED,
+	BUT IS PLANNED FOR A LATER RELEASE!
+							]]></xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+</xsd:schema>

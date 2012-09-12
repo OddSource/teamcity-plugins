@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/LinuxSystemProperties/LinuxSystemProperties.iml" filepath="$PROJECT_DIR$/LinuxSystemProperties/LinuxSystemProperties.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SharedBuildNumber/SharedBuildNumber.iml" filepath="$PROJECT_DIR$/SharedBuildNumber/SharedBuildNumber.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TeamCityPlugins.iml" filepath="$PROJECT_DIR$/TeamCityPlugins.iml" />
+    </modules>
+  </component>
+</project>
+
