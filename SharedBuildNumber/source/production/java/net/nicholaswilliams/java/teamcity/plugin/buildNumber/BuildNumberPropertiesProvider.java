@@ -1,5 +1,5 @@
 /*
- * BuildNumberPropertiesProvider.java from TeamCityPlugins modified Wednesday, September 12, 2012 21:01:09 CDT (-0500).
+ * BuildNumberPropertiesProvider.java from TeamCityPlugins modified Wednesday, September 12, 2012 21:28:34 CDT (-0500).
  *
  * Copyright 2010-2012 the original author or authors.
  *
