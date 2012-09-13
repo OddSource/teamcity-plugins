@@ -1,5 +1,5 @@
 /*
- * BuildNumberPropertiesProvider.java from TeamCityPlugins modified Friday, September 7, 2012 22:38:36 CDT (-0500).
+ * BuildNumberPropertiesProvider.java from TeamCityPlugins modified Wednesday, September 12, 2012 21:01:09 CDT (-0500).
  *
  * Copyright 2010-2012 the original author or authors.
  *
@@ -45,17 +45,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Performs the actual updating of build properties. This class is heavily derived from and a modified version of
- * jetbrains.buildServer.server.autoincrementer.AutoincrementPropertiesProvider from the
- * <a href="http://confluence.jetbrains.net/display/TW/Autoincrementer" target="_blank">autoincrementer plugin</a>,
- * copyright 2000-2009 JetBrains s.r.o. Used with permission under the terms of the Apache License 2.0, which covers
- * all use and modification of the original source code with attribution. See NOTICE.txt for more information.
- *
- * @author Nick Williams
- * @version 1.0.0
- * @since 1.0.0
- */
 public class BuildNumberPropertiesProvider
 		extends AbstractBuildParametersProvider
 		implements BuildStartContextProcessor, ParameterDescriptionProvider
@@ -132,7 +121,8 @@ public class BuildNumberPropertiesProvider
 		Set<String> parameters = new HashSet<String>();
 		parameters.addAll(runningBuild.getParametersProvider().getAll().values());
 
-		for(SRunnerContext runnerContext : buildStartContext.getRunnerContexts())
+		Collection<? extends SRunnerContext> runnerContexts = buildStartContext.getRunnerContexts();
+		for(SRunnerContext runnerContext : runnerContexts)
 		{
 			parameters.addAll(runnerContext.getParameters().values());
 		}
@@ -151,7 +141,7 @@ public class BuildNumberPropertiesProvider
 
 		this.updateSharedParameters(buildStartContext, pluginParameters);
 
-		this.updateBuildNumber(buildStartContext, runningBuild);
+		this.updateBuildNumber(buildStartContext, runningBuild, runnerContexts);
 	}
 
 	@NotNull
@@ -194,7 +184,7 @@ public class BuildNumberPropertiesProvider
 
 					if(buildNumber == null)
 					{
-						BuildNumberPropertiesProvider.logger.error("No shared build number found for ID [" + id + "].");
+						BuildNumberPropertiesProvider.logger.warn("No shared build number found for ID [" + id + "].");
 						continue;
 					}
 
@@ -209,14 +199,14 @@ public class BuildNumberPropertiesProvider
 				}
 				catch(IOException e)
 				{
-					BuildNumberPropertiesProvider.logger.error(
+					BuildNumberPropertiesProvider.logger.warn(
 							"Could not increment build number for ID [" + id + "].", e
 					);
 				}
 			}
 			else
 			{
-				BuildNumberPropertiesProvider.logger.error(
+				BuildNumberPropertiesProvider.logger.warn(
 						"Shared build number parameter [" + parameter +
 						"] was not formatted correctly; ID could not be extracted."
 				);
@@ -224,10 +214,11 @@ public class BuildNumberPropertiesProvider
 		}
 	}
 
-	private void updateBuildNumber(@NotNull BuildStartContext buildStartContext, @NotNull SRunningBuild runningBuild)
+	private void updateBuildNumber(@NotNull BuildStartContext buildStartContext, @NotNull SRunningBuild runningBuild,
+								   @NotNull Collection<? extends SRunnerContext> runnerContexts)
 	{
 		CompositeParametersProviderImpl provider = new CompositeParametersProviderImpl();
-		for(SRunnerContext runnerContext: buildStartContext.getRunnerContexts())
+		for(SRunnerContext runnerContext: runnerContexts)
 		{
 			provider.appendParametersProvider(new MapParametersProviderImpl(runnerContext.getParameters()));
 		}
