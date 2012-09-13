@@ -1,5 +1,5 @@
 /*
- * BuildNumberPropertiesProvider.java from TeamCityPlugins modified Wednesday, September 12, 2012 21:28:34 CDT (-0500).
+ * BuildNumberPropertiesProvider.java from TeamCityPlugins modified Wednesday, September 12, 2012 21:33:15 CDT (-0500).
  *
  * Copyright 2010-2012 the original author or authors.
  *
@@ -45,6 +45,17 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
+/**
+ * Performs the actual updating of build properties. This class is heavily derived from and a modified version of
+ * jetbrains.buildServer.server.autoincrementer.AutoincrementPropertiesProvider from the
+ * <a href="http://confluence.jetbrains.net/display/TW/Autoincrementer" target="_blank">autoincrementer plugin</a>,
+ * original work of JetBrains s.r.o. Used with permission under the terms of the Apache License 2.0, which covers
+ * all use and modification of the original source code with attribution. See NOTICE.txt for more information.
+ *
+ * @author Nick Williams
+ * @version 1.0.0
+ * @since 1.0.0
+ */
 public class BuildNumberPropertiesProvider
 		extends AbstractBuildParametersProvider
 		implements BuildStartContextProcessor, ParameterDescriptionProvider
