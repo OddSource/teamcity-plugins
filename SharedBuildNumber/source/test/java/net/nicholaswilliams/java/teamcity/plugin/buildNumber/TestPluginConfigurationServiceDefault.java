@@ -1,5 +1,5 @@
 /*
- * TestPluginConfigurationServiceDefault.java from TeamCityPlugins modified Sunday, September 9, 2012 14:34:34 CDT (-0500).
+ * TestPluginConfigurationServiceDefault.java from TeamCityPlugins modified Saturday, September 15, 2012 11:41:35 CDT (-0500).
  *
  * Copyright 2010-2012 the original author or authors.
  *
@@ -176,8 +176,6 @@ public class TestPluginConfigurationServiceDefault
 		replay(this.service);
 
 		int[] ids = this.service.getAllSharedBuildNumberIds();
-
-		System.out.println(ArrayUtils.toString(ids));
 
 		assertNotNull("The list of IDs should not be null.", ids);
 		assertTrue("The list of IDs should contain 1.", ArrayUtils.contains(ids, 1));

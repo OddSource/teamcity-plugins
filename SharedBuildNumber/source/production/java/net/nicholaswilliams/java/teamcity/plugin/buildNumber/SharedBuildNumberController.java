@@ -1,5 +1,5 @@
 /*
- * SharedBuildNumberController.java from TeamCityPlugins modified Monday, September 10, 2012 22:12:29 CDT (-0500).
+ * SharedBuildNumberController.java from TeamCityPlugins modified Saturday, September 15, 2012 11:34:17 CDT (-0500).
  *
  * Copyright 2010-2012 the original author or authors.
  *
@@ -34,6 +34,8 @@ import jetbrains.buildServer.web.util.WebUtil;
 import net.nicholaswilliams.java.teamcity.plugin.buildNumber.pojo.SharedBuildNumber;
 import org.apache.commons.lang.math.NumberUtils;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -42,8 +44,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.Map;
 import java.util.SortedSet;
 
 /**
@@ -204,14 +204,15 @@ public class SharedBuildNumberController extends BaseController
 	protected ModelAndView submitAddBuildNumber(HttpServletRequest request)
 			throws IOException
 	{
-		Map<String, String> errors = new Hashtable<String, String>(6);
-		SharedBuildNumber form = this.getAndValidateFormFromRequest(request, 0, errors);
+		SharedBuildNumber form = new SharedBuildNumber(0);
+		BindingResult result = new BeanPropertyBindingResult(form, SharedBuildNumberController.FORM);
+		this.bindAndValidateForm(request, result);
 
-		if(!errors.isEmpty())
+		if(result.hasErrors())
 		{
 			ModelAndView modelAndView = new ModelAndView(this.addJspPagePath);
 
-			modelAndView.getModel().put("errors", errors);
+			modelAndView.getModel().put(BindingResult.MODEL_KEY_PREFIX + SharedBuildNumberController.FORM, result);
 			modelAndView.getModel().put(SharedBuildNumberController.FORM, form);
 
 			return modelAndView;
@@ -235,7 +236,9 @@ public class SharedBuildNumberController extends BaseController
 			{
 				ModelAndView modelAndView = new ModelAndView(this.editJspPagePath);
 
-				modelAndView.getModel().put(SharedBuildNumberController.PREFIX, BuildNumberPropertiesProvider.PARAMETER_PREFIX);
+				modelAndView.getModel().put(
+						SharedBuildNumberController.PREFIX, BuildNumberPropertiesProvider.PARAMETER_PREFIX
+				);
 				modelAndView.getModel().put(SharedBuildNumberController.FORM, form);
 
 				return modelAndView;
@@ -257,15 +260,20 @@ public class SharedBuildNumberController extends BaseController
 			SharedBuildNumber buildNumber = this.configurationService.getSharedBuildNumber(id);
 			if(buildNumber != null)
 			{
-				Map<String, String> errors = new Hashtable<String, String>(6);
-				SharedBuildNumber form = this.getAndValidateFormFromRequest(request, id, errors);
+				SharedBuildNumber form = new SharedBuildNumber(id);
+				BindingResult result = new BeanPropertyBindingResult(form, SharedBuildNumberController.FORM);
+				this.bindAndValidateForm(request, result);
 
-				if(!errors.isEmpty())
+				if(result.hasErrors())
 				{
-					ModelAndView modelAndView = new ModelAndView(this.addJspPagePath);
+					ModelAndView modelAndView = new ModelAndView(this.editJspPagePath);
 
-					modelAndView.getModel().put("errors", errors);
-					modelAndView.getModel().put(SharedBuildNumberController.PREFIX, BuildNumberPropertiesProvider.PARAMETER_PREFIX);
+					modelAndView.getModel().put(
+							BindingResult.MODEL_KEY_PREFIX + SharedBuildNumberController.FORM, result
+					);
+					modelAndView.getModel().put(
+							SharedBuildNumberController.PREFIX, BuildNumberPropertiesProvider.PARAMETER_PREFIX
+					);
 					modelAndView.getModel().put(SharedBuildNumberController.FORM, form);
 
 					return modelAndView;
@@ -301,9 +309,9 @@ public class SharedBuildNumberController extends BaseController
 		return null;
 	}
 
-	private SharedBuildNumber getAndValidateFormFromRequest(HttpServletRequest request, int id, Map<String, String> errors)
+	private void bindAndValidateForm(HttpServletRequest request, BindingResult result)
 	{
-		SharedBuildNumber form = new SharedBuildNumber(id);
+		SharedBuildNumber form = (SharedBuildNumber)result.getTarget();
 
 		form.setName(request.getParameter("name"));
 		form.setDescription(request.getParameter("description"));
@@ -311,7 +319,7 @@ public class SharedBuildNumberController extends BaseController
 		form.setDateFormat(request.getParameter("dateFormat"));
 
 		String counterString = request.getParameter("counter");
-		if(NumberUtils.isDigits(counterString) && !counterString.contains(".") && !counterString.contains("-"))
+		if(NumberUtils.isDigits(counterString))
 		{
 			form.setCounter(Integer.parseInt(counterString));
 			if(form.getCounter() < 1)
@@ -319,19 +327,25 @@ public class SharedBuildNumberController extends BaseController
 		}
 		else
 		{
-			errors.put("counter", "The counter must be a positive integer.");
+			result.rejectValue("counter", "counter.not.integer", "The counter must be a positive integer.");
 		}
 
 		if(form.getName() == null || form.getName().trim().length() < 5 || form.getName().trim().length() > 60)
-			errors.put("name", "The name must be between 5 and 60 characters long.");
+		{
+			result.rejectValue("name", "name.length", "The name must be between 5 and 60 characters long.");
+		}
 
 		if(form.getFormat() == null || form.getFormat().trim().length() < 3)
-			errors.put("format", "The build number format must be at least 3 characters long.");
-
-		if(form.getDateFormat() == null || form.getDateFormat().trim().length() < 3)
-			errors.put("dateFormat", "The date format must be at least 3 characters long.");
-
-		return form;
+		{
+			result.rejectValue("format", "format.length",
+							   "The build number format must be at least 3 characters long.");
+		}
+		else if(form.getFormat().toLowerCase().contains("{d}") &&
+				(form.getDateFormat() == null || form.getDateFormat().trim().length() < 3))
+		{
+			result.rejectValue("dateFormat", "dateFormat.length",
+							   "The date format must be at least 3 characters long.");
+		}
 	}
 
 	private void copyFormToBuildNumber(SharedBuildNumber form, SharedBuildNumber buildNumber)
@@ -346,7 +360,7 @@ public class SharedBuildNumberController extends BaseController
 	private Integer getId(HttpServletRequest request)
 	{
 		String idString = request.getParameter("id");
-		if(NumberUtils.isDigits(idString) && !idString.contains(".") && !idString.contains("-"))
+		if(NumberUtils.isDigits(idString))
 		{
 			return Integer.parseInt(idString);
 		}
