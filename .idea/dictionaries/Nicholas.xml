@@ -42,6 +42,7 @@
       <w>junit</w>
       <w>licensemanager</w>
       <w>licensor</w>
+      <w>linuxsystemproperties</w>
       <w>localedata</w>
       <w>longopt</w>
       <w>microsystems</w>
@@ -62,6 +63,7 @@
       <w>sunjce</w>
       <w>sunpkcs</w>
       <w>teamcity</w>
+      <w>teamcityplugins</w>
       <w>tokenized</w>
       <w>unregister</w>
       <w>unserialize</w>
@@ -71,8 +73,12 @@
       <w>unstarted</w>
       <w>username</w>
       <w>verdana</w>
+      <w>werror</w>
       <w>williamsn</w>
       <w>xhtml</w>
+      <w>xlint</w>
+      <w>xmaxerrs</w>
+      <w>xmaxwarns</w>
       <w>xmlns</w>
     </words>
   </dictionary>

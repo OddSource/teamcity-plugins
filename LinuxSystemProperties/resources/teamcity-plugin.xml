@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ teamcity-plugin.xml from TeamCityPlugins modified Friday, September 7, 2012 09:44:47 CDT (-0500).
+  ~ teamcity-plugin.xml from TeamCityPlugins modified Saturday, September 15, 2012 13:38:57 CDT (-0500).
   ~
   ~ Copyright 2010-2012 the original author or authors.
   ~
@@ -21,7 +21,7 @@
 	<info>
 		<name>linux-system-properties</name>
 		<display-name>Linux Extra System Properties</display-name>
-		<version>0.9.12</version>
+		<version>{linuxsystemproperties.version}</version>
 		<description>Provides os.linux.flavor, os.linux.distribution.name and os.linux.distribution.version system information on server and agent.</description>
 		<vendor>
 			<name>NWTS Java Code</name>

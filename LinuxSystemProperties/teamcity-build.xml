@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ teamcity-build.xml from TeamCityPlugins modified Sunday, September 16, 2012 09:34:32 CDT (-0500).
+  ~
+  ~ Copyright 2010-2012 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project name="linuxsystemproperties">
+
+	<property name="module.name" value="LinuxSystemProperties" />
+
+	<dirname property="directory.module.base" file="${ant.file}" />
+
+	<property environment="nwts.build.environment" />
+
+	<property file="teamcity-build.properties" />
+
+	<!-- Directories -->
+	<property name="directory.project.base" value="${directory.module.base}/../" />
+	<property name="directory.shared.libraries" value="${directory.project.base}/libraries" />
+
+	<property name="directory.output" value="${directory.project.base}/out" />
+	<property name="directory.output.compile.production.module" value="${directory.output}/production/${module.name}" />
+	<property name="directory.output.compile.test.module" value="${directory.output}/test/${module.name}" />
+	<property name="directory.output.artifact.module" value="${directory.output}/artifacts/${module.name}" />
+	<property name="directory.output.test.junit.module" value="${directory.output}/junit/${module.name}" />
+
+	<property name="directory.module.libraries" value="${directory.module.base}/libraries" />
+	<property name="directory.module.resources" value="${directory.module.base}/resources" />
+	<property name="directory.module.source" value="${directory.module.base}/source" />
+	<property name="directory.module.source.production" value="${directory.module.source}/production" />
+	<property name="directory.module.source.test" value="${directory.module.source}/test" />
+
+	<!-- Paths -->
+	<path id="path.module.compile.production">
+		<fileset dir="${directory.shared.libraries}/provided">
+			<include name="**/**" />
+		</fileset>
+		<fileset dir="${directory.module.libraries}/provided">
+			<include name="**/**" />
+		</fileset>
+		<fileset dir="${directory.shared.libraries}/compile">
+			<include name="**/**" />
+		</fileset>
+		<fileset dir="${directory.module.libraries}/compile">
+			<include name="**/**" />
+		</fileset>
+	</path>
+
+	<path id="path.module.compile.test">
+		<path refid="path.module.compile.production" />
+		<pathelement location="${directory.output.compile.production.module}" />
+		<fileset dir="${directory.shared.libraries}/test">
+			<include name="**/**" />
+		</fileset>
+		<fileset dir="${directory.module.libraries}/test">
+			<include name="**/**" />
+		</fileset>
+	</path>
+
+	<path id="path.module.run.test">
+		<path refid="path.module.compile.test" />
+		<fileset dir="${directory.shared.libraries}/runtime">
+			<include name="**/**" />
+		</fileset>
+		<fileset dir="${directory.module.libraries}/runtime">
+			<include name="**/**" />
+		</fileset>
+		<pathelement location="${directory.output.compile.test.module}" />
+	</path>
+
+	<!-- JDK definitions -->
+	<property name="jdk.home.1.6" value="${nwts.build.environment.JDK_16}" />
+	<property name="jdk.bin.1.6" value="${jdk.home.1.6}/bin" />
+
+	<property name="jdk.home.project" value="${jdk.home.1.6}" />
+	<property name="jdk.bin.project" value="${jdk.bin.1.6}" />
+
+	<property name="jdk.home.module" value="${jdk.home.project}" />
+	<property name="jdk.bin.module" value="${jdk.bin.project}" />
+
+	<!-- Compiler options -->
+	<property name="compiler.debug" value="on" />
+	<property name="compiler.debug.level" value="lines,source" />
+	<property name="compiler.generate.no.warnings" value="off" />
+	<property name="compiler.arguments" value="-Xmaxerrs 10000 -Xlint -Xmaxwarns 10000 -Werror" />
+	<property name="compiler.maximum.memory" value="256m" />
+
+	<!-- Task Definitions -->
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="${directory.shared.libraries}/build/net.sf.antcontrib-1.0.0.b3.jar" />
+		</classpath>
+	</taskdef>
+
+	<!-- Private Build Definitions -->
+	<target name="private.clean" description="Clean up previous output">
+		<delete dir="${directory.output}" />
+	</target>
+
+	<target name="private.init" description="Initialize build" depends="private.clean">
+		<mkdir dir="${directory.output}" />
+
+		<!-- Determining the Java version for the compiler that we're actually using -->
+		<exec executable="${jdk.bin.module}/javac" outputproperty="java.jvm.version" failonerror="true"
+			  failifexecutionfails="true">
+			<arg value="-version" />
+		</exec>
+		<propertyregex property="java.jvm.version" input="${java.jvm.version}" casesensitive="false" override="true"
+					   regexp="javac ([0-9a-b\.\_]+)" replace="\1" />
+
+		<property name="linuxsystemproperties.version.without.build" value="linuxsystemproperties.version" />
+		<propertyregex property="linuxsystemproperties.version.without.build" input="${linuxsystemproperties.version}"
+					   override="true" regexp="(\d\.\d\.\d)(\.\d+)(.*)" replace="\1\3" />
+
+		<property name="jar.name.agent" value="linux-system-properties-agent.jar" />
+		<property name="jar.name.server" value="linux-system-properties-server.jar" />
+		<property name="jar.name.plugin" value="linux-system.properties.jar" />
+
+		<property name="zip.name.agent" value="linux-system-properties-agent.zip" />
+		<property name="zip.name.plugin" value="linux-system-properties.zip" />
+
+		<echo message="Running JRE version is ${ant.java.version}" />
+		<echo message="Specified JDK version is ${java.jvm.version}" />
+		<echo message="Current build number is ${linuxsystemproperties.version}, version number is ${linuxsystemproperties.version.without.build}" />
+	</target>
+
+	<target name="private.compile.source" description="Compile production source files" depends="private.init">
+		<mkdir dir="${directory.output.compile.production.module}" />
+
+		<javac executable="${jdk.bin.module}/javac" srcdir="${directory.module.source.production}/java"
+			   destdir="${directory.output.compile.production.module}" debug="${compiler.debug}"  fork="true"
+			   debuglevel="${compiler.debug.level}" nowarn="${compiler.generate.no.warnings}" includeantruntime="false"
+			   memorymaximumsize="${compiler.maximum.memory}">
+			<compilerarg line="${compiler.arguments}" />
+			<classpath refid="path.module.compile.production" />
+		</javac>
+	</target>
+
+	<target name="private.compile.test" description="Compile test source files" depends="private.compile.source">
+		<mkdir dir="${directory.output.compile.test.module}" />
+
+		<javac executable="${jdk.bin.module}/javac" srcdir="${directory.module.source.test}/java"
+			   destdir="${directory.output.compile.test.module}" debug="${compiler.debug}"  fork="true"
+			   debuglevel="${compiler.debug.level}" nowarn="${compiler.generate.no.warnings}" includeantruntime="false"
+			   memorymaximumsize="${compiler.maximum.memory}">
+			<compilerarg line="${compiler.arguments}" />
+			<classpath refid="path.module.compile.test" />
+		</javac>
+	</target>
+
+	<target name="private.run.tests.unit" description="Execute unit tests" depends="private.compile.test">
+		<mkdir dir="${directory.output.test.junit.module}" />
+		<mkdir dir="${directory.output.test.junit.module}/temp" />
+		<mkdir dir="${directory.output.test.junit.module}/unit" />
+
+		<junit jvm="${jdk.bin.module}/java" tempdir="${directory.output.test.junit.module}/temp" fork="yes"
+			   forkmode="perTest" printsummary="yes" outputtoformatters="yes" failureproperty="run.tests.unit.failed">
+			<classpath>
+				<path refid="path.module.run.test" />
+			</classpath>
+
+			<formatter type="plain" />
+
+			<batchtest todir="${directory.output.test.junit.module}/unit">
+				<fileset dir="${directory.module.source.test}/java">
+					<include name="**/*.java" />
+					<exclude name="**/Mock*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+
+		<fail if="run.tests.unit.failed" />
+	</target>
+
+	<target name="private.update.version" description="Update the version number in the appropriate files">
+		<mkdir dir="${directory.output.artifact.module}" />
+
+		<copy file="${directory.module.resources}/teamcity-plugin.xml" todir="${directory.output.artifact.module}" />
+		<copy file="${directory.module.resources}/version.properties" todir="${directory.output.artifact.module}" />
+
+		<replace file="${directory.output.artifact.module}/teamcity-plugin.xml" token="{linuxsystemproperties.version}"
+				 value="${linuxsystemproperties.version.without.build}" failonnoreplacements="true" />
+		<replace file="${directory.output.artifact.module}/version.properties" token="{linuxsystemproperties.version}"
+				 value="${linuxsystemproperties.version}" failonnoreplacements="true" />
+	</target>
+
+	<target name="private.package.agent" description="Package the agent plugin"
+			depends="private.run.tests.unit, private.update.version">
+		<jar destfile="${directory.output.artifact.module}/${jar.name.agent}" duplicate="fail" filesetmanifest="skip"
+			 index="true">
+			<manifest>
+				<attribute name="Manifest-Version" value="1.0" />
+				<attribute name="Ant-Version" value="${ant.version}" />
+				<attribute name="Java-Version" value="${java.jvm.version}" />
+				<attribute name="Created-By" value="TeamCity" />
+				<attribute name="Bundle-Vendor" value="NWTS Java Code" />
+				<attribute name="Specification-Title" value="NWTS TeamCity Plugins :: LinuxSystemProperties" />
+				<attribute name="Specification-Version" value="${linuxsystemproperties.version.without.build}" />
+				<attribute name="Implementation-Version" value="${linuxsystemproperties.version}" />
+				<attribute name="Sealed" value="true" />
+			</manifest>
+			<zipfileset file="${directory.module.resources}/LICENSE.txt" prefix="META-INF" />
+			<zipfileset file="${directory.module.resources}/NOTICE.txt" prefix="META-INF" />
+			<zipfileset file="${directory.module.resources}/build-agent-plugin-linux-system-properties.xml"
+						prefix="META-INF" />
+			<zipfileset dir="${directory.output.compile.production.module}" />
+		</jar>
+
+		<zip destfile="${directory.output.artifact.module}/${zip.name.agent}" duplicate="fail">
+			<zipfileset dir="${directory.output.artifact.module}" prefix="linux-system-properties">
+				<include name="${jar.name.agent}" />
+				<include name="version.properties" />
+			</zipfileset>
+			<zipfileset dir="${directory.shared.libraries}/runtime" includes="*.jar" prefix="linux-system-properties" />
+			<zipfileset dir="${directory.shared.libraries}/compile" includes="*.jar" prefix="linux-system-properties" />
+			<zipfileset dir="${directory.module.libraries}/runtime" includes="*.jar" prefix="linux-system-properties" />
+			<zipfileset dir="${directory.module.libraries}/compile" includes="*.jar" prefix="linux-system-properties" />
+		</zip>
+	</target>
+
+	<target name="private.package.server" description="Package the server plugin"
+			depends="private.run.tests.unit, private.update.version">
+		<jar destfile="${directory.output.artifact.module}/${jar.name.server}" duplicate="fail" filesetmanifest="skip"
+			 index="true">
+			<manifest>
+				<attribute name="Manifest-Version" value="1.0" />
+				<attribute name="Ant-Version" value="${ant.version}" />
+				<attribute name="Java-Version" value="${java.jvm.version}" />
+				<attribute name="Created-By" value="TeamCity" />
+				<attribute name="Bundle-Vendor" value="NWTS Java Code" />
+				<attribute name="Specification-Title" value="NWTS TeamCity Plugins :: LinuxSystemProperties" />
+				<attribute name="Specification-Version" value="${linuxsystemproperties.version.without.build}" />
+				<attribute name="Implementation-Version" value="${linuxsystemproperties.version}" />
+				<attribute name="Sealed" value="true" />
+			</manifest>
+			<zipfileset file="${directory.module.resources}/LICENSE.txt" prefix="META-INF" />
+			<zipfileset file="${directory.module.resources}/NOTICE.txt" prefix="META-INF" />
+			<zipfileset file="${directory.module.resources}/build-server-plugin-linux-system-properties.xml"
+						prefix="META-INF" />
+			<zipfileset dir="${directory.output.compile.production.module}" />
+		</jar>
+	</target>
+
+	<target name="private.package.plugin" description="Package the plugin"
+			depends="private.package.agent, private.package.server, private.update.version">
+		<zip destfile="${directory.output.artifact.module}/${zip.name.plugin}" duplicate="fail">
+			<zipfileset dir="${directory.output.artifact.module}" includes="${zip.name.agent}" prefix="agent" />
+			<zipfileset dir="${directory.output.artifact.module}" includes="${jar.name.server}" prefix="server" />
+			<zipfileset dir="${directory.shared.libraries}/runtime" includes="*.jar" prefix="server" />
+			<zipfileset dir="${directory.shared.libraries}/compile" includes="*.jar" prefix="server" />
+			<zipfileset dir="${directory.module.libraries}/runtime" includes="*.jar" prefix="server" />
+			<zipfileset dir="${directory.module.libraries}/compile" includes="*.jar" prefix="server" />
+			<zipfileset dir="${directory.output.artifact.module}">
+				<include name="teamcity-plugin.xml" />
+				<include name="version.properties" />
+			</zipfileset>
+			<zipfileset dir="${directory.module.resources}">
+				<include name="LICENSE.txt" />
+				<include name="NOTICE.txt" />
+			</zipfileset>
+		</zip>
+	</target>
+
+	<!-- Public Build Definitions -->
+	<target name="public.clean" description="Clean up previous output" depends="private.clean" />
+
+	<target name="public.package" description="Compile, test and package" depends="private.package.plugin" />
+
+</project>
