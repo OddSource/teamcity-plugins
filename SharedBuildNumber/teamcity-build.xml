@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ teamcity-build.xml from TeamCityPlugins modified Sunday, September 16, 2012 11:15:14 CDT (-0500).
+  ~ teamcity-build.xml from TeamCityPlugins modified Sunday, September 16, 2012 11:27:01 CDT (-0500).
   ~
   ~ Copyright 2010-2012 the original author or authors.
   ~
@@ -16,7 +16,6 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
 <project name="sharedbuildnumber">
 
 	<property name="module.name" value="SharedBuildNumber" />
