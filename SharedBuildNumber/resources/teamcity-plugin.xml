@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ teamcity-plugin.xml from TeamCityPlugins modified Friday, September 7, 2012 09:44:47 CDT (-0500).
+  ~ teamcity-plugin.xml from TeamCityPlugins modified Sunday, September 16, 2012 11:07:17 CDT (-0500).
   ~
   ~ Copyright 2010-2012 the original author or authors.
   ~
@@ -21,7 +21,7 @@
 	<info>
 		<name>shared-build-number</name>
 		<display-name>Advanced Shared Build Number</display-name>
-		<version>0.9.0</version>
+		<version>{sharedbuildnumber.version}</version>
 		<description>Provides a graphically-managed system for creating shared build numbers and formats to share between build configurations.</description>
 		<vendor>
 			<name>NWTS Java Code</name>

@@ -1,5 +1,5 @@
 /*
- * JodaDateTimeConverter.java from TeamCityPlugins modified Sunday, September 9, 2012 16:36:46 CDT (-0500).
+ * JodaXML8601DateTimeConverter.java from TeamCityPlugins modified Sunday, September 16, 2012 11:21:10 CDT (-0500).
  *
  * Copyright 2010-2012 the original author or authors.
  *
@@ -59,7 +59,7 @@ public class JodaXML8601DateTimeConverter extends AbstractConverter
 
 	public void setBackupDateTimeFormatter(@NotNull DateTimeFormatter backupDateTimeFormatter)
 	{
-		Assert.notNull(dateTimeFormatter, "The date/time format cannot be null.");
+		Assert.notNull(backupDateTimeFormatter, "The backup date/time format cannot be null.");
 
 		this.backupDateTimeFormatter = backupDateTimeFormatter;
 	}

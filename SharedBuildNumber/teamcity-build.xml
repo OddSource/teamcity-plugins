@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ teamcity-build.xml from TeamCityPlugins modified Sunday, September 16, 2012 11:15:50 CDT (-0500).
+  ~ teamcity-build.xml from TeamCityPlugins modified Sunday, September 16, 2012 11:15:14 CDT (-0500).
   ~
   ~ Copyright 2010-2012 the original author or authors.
   ~
@@ -17,9 +17,9 @@
   ~ limitations under the License.
   -->
 
-<project name="linuxsystemproperties">
+<project name="sharedbuildnumber">
 
-	<property name="module.name" value="LinuxSystemProperties" />
+	<property name="module.name" value="SharedBuildNumber" />
 
 	<dirname property="directory.module.base" file="${ant.file}" />
 
@@ -121,19 +121,17 @@
 		<propertyregex property="java.jvm.version" input="${java.jvm.version}" casesensitive="false" override="true"
 					   regexp="javac ([0-9a-b\.\_]+)" replace="\1" />
 
-		<property name="linuxsystemproperties.version.without.build" value="linuxsystemproperties.version" />
-		<propertyregex property="linuxsystemproperties.version.without.build" input="${linuxsystemproperties.version}"
+		<property name="sharedbuildnumber.version.without.build" value="sharedbuildnumber.version" />
+		<propertyregex property="sharedbuildnumber.version.without.build" input="${sharedbuildnumber.version}"
 					   override="true" regexp="(\d\.\d\.\d)(\.\d+)(.*)" replace="\1\3" />
 
-		<property name="jar.name.agent" value="linux-system-properties-agent.jar" />
-		<property name="jar.name.server" value="linux-system-properties-server.jar" />
+		<property name="jar.name.server" value="shared-build-number.jar" />
 
-		<property name="zip.name.agent" value="linux-system-properties-agent.zip" />
-		<property name="zip.name.plugin" value="linux-system-properties.zip" />
+		<property name="zip.name.plugin" value="shared-build-number.zip" />
 
 		<echo message="Running JRE version is ${ant.java.version}" />
 		<echo message="Specified JDK version is ${java.jvm.version}" />
-		<echo message="Current build number is ${linuxsystemproperties.version}, version number is ${linuxsystemproperties.version.without.build}" />
+		<echo message="Current build number is ${sharedbuildnumber.version}, version number is ${sharedbuildnumber.version.without.build}" />
 	</target>
 
 	<target name="private.compile.source" description="Compile production source files" depends="private.init">
@@ -200,46 +198,9 @@
 		<mkdir dir="${directory.output.artifact.module}" />
 
 		<copy file="${directory.module.resources}/teamcity-plugin.xml" todir="${directory.output.artifact.module}" />
-		<copy file="${directory.module.resources}/version.properties" todir="${directory.output.artifact.module}" />
 
-		<replace file="${directory.output.artifact.module}/teamcity-plugin.xml" token="{linuxsystemproperties.version}"
-				 value="${linuxsystemproperties.version.without.build}" failonnoreplacements="true" />
-		<replace file="${directory.output.artifact.module}/version.properties" token="{linuxsystemproperties.version}"
-				 value="${linuxsystemproperties.version}" failonnoreplacements="true" />
-	</target>
-
-	<target name="private.package.agent" description="Package the agent plugin"
-			depends="private.run.tests.unit, private.update.version">
-		<jar destfile="${directory.output.artifact.module}/${jar.name.agent}" duplicate="fail" filesetmanifest="skip"
-			 index="true">
-			<manifest>
-				<attribute name="Manifest-Version" value="1.0" />
-				<attribute name="Ant-Version" value="${ant.version}" />
-				<attribute name="Java-Version" value="${java.jvm.version}" />
-				<attribute name="Created-By" value="TeamCity" />
-				<attribute name="Bundle-Vendor" value="NWTS Java Code" />
-				<attribute name="Specification-Title" value="NWTS TeamCity Plugins :: ${module.name}" />
-				<attribute name="Specification-Version" value="${linuxsystemproperties.version.without.build}" />
-				<attribute name="Implementation-Version" value="${linuxsystemproperties.version}" />
-				<attribute name="Sealed" value="true" />
-			</manifest>
-			<zipfileset file="${directory.module.resources}/LICENSE.txt" prefix="META-INF" />
-			<zipfileset file="${directory.module.resources}/NOTICE.txt" prefix="META-INF" />
-			<zipfileset file="${directory.module.resources}/build-agent-plugin-linux-system-properties.xml"
-						prefix="META-INF" />
-			<zipfileset dir="${directory.output.compile.production.module}" />
-		</jar>
-
-		<zip destfile="${directory.output.artifact.module}/${zip.name.agent}" duplicate="fail">
-			<zipfileset dir="${directory.output.artifact.module}" prefix="linux-system-properties">
-				<include name="${jar.name.agent}" />
-				<include name="version.properties" />
-			</zipfileset>
-			<zipfileset dir="${directory.shared.libraries}/runtime" includes="*.jar" prefix="linux-system-properties" />
-			<zipfileset dir="${directory.shared.libraries}/compile" includes="*.jar" prefix="linux-system-properties" />
-			<zipfileset dir="${directory.module.libraries}/runtime" includes="*.jar" prefix="linux-system-properties" />
-			<zipfileset dir="${directory.module.libraries}/compile" includes="*.jar" prefix="linux-system-properties" />
-		</zip>
+		<replace file="${directory.output.artifact.module}/teamcity-plugin.xml" token="{sharedbuildnumber.version}"
+				 value="${sharedbuildnumber.version.without.build}" failonnoreplacements="true" />
 	</target>
 
 	<target name="private.package.server" description="Package the server plugin"
@@ -253,22 +214,22 @@
 				<attribute name="Created-By" value="TeamCity" />
 				<attribute name="Bundle-Vendor" value="NWTS Java Code" />
 				<attribute name="Specification-Title" value="NWTS TeamCity Plugins :: ${module.name}" />
-				<attribute name="Specification-Version" value="${linuxsystemproperties.version.without.build}" />
-				<attribute name="Implementation-Version" value="${linuxsystemproperties.version}" />
+				<attribute name="Specification-Version" value="${sharedbuildnumber.version.without.build}" />
+				<attribute name="Implementation-Version" value="${sharedbuildnumber.version}" />
 				<attribute name="Sealed" value="true" />
 			</manifest>
 			<zipfileset file="${directory.module.resources}/LICENSE.txt" prefix="META-INF" />
 			<zipfileset file="${directory.module.resources}/NOTICE.txt" prefix="META-INF" />
-			<zipfileset file="${directory.module.resources}/build-server-plugin-linux-system-properties.xml"
+			<zipfileset file="${directory.module.resources}/build-server-plugin-shared-build-number.xml"
 						prefix="META-INF" />
+			<zipfileset dir="${directory.module.resources}/buildServerResources" prefix="buildServerResources" />
 			<zipfileset dir="${directory.output.compile.production.module}" />
 		</jar>
 	</target>
 
 	<target name="private.package.plugin" description="Package the plugin"
-			depends="private.package.agent, private.package.server, private.update.version">
+			depends="private.package.server, private.update.version">
 		<zip destfile="${directory.output.artifact.module}/${zip.name.plugin}" duplicate="fail">
-			<zipfileset dir="${directory.output.artifact.module}" includes="${zip.name.agent}" prefix="agent" />
 			<zipfileset dir="${directory.output.artifact.module}" includes="${jar.name.server}" prefix="server" />
 			<zipfileset dir="${directory.shared.libraries}/runtime" includes="*.jar" prefix="server" />
 			<zipfileset dir="${directory.shared.libraries}/compile" includes="*.jar" prefix="server" />
@@ -276,7 +237,6 @@
 			<zipfileset dir="${directory.module.libraries}/compile" includes="*.jar" prefix="server" />
 			<zipfileset dir="${directory.output.artifact.module}">
 				<include name="teamcity-plugin.xml" />
-				<include name="version.properties" />
 			</zipfileset>
 			<zipfileset dir="${directory.module.resources}">
 				<include name="LICENSE.txt" />
