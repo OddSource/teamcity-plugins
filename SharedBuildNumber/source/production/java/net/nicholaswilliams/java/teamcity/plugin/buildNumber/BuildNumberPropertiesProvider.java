@@ -1,5 +1,5 @@
 /*
- * BuildNumberPropertiesProvider.java from TeamCityPlugins modified Wednesday, September 12, 2012 21:33:15 CDT (-0500).
+ * BuildNumberPropertiesProvider.java from TeamCityPlugins modified Friday, September 21, 2012 22:10:38 CDT (-0500).
  *
  * Copyright 2010-2012 the original author or authors.
  *
@@ -32,7 +32,6 @@ import jetbrains.buildServer.serverSide.BuildStartContextProcessor;
 import jetbrains.buildServer.serverSide.SBuild;
 import jetbrains.buildServer.serverSide.SRunnerContext;
 import jetbrains.buildServer.serverSide.SRunningBuild;
-import jetbrains.buildServer.serverSide.parameters.AbstractBuildParametersProvider;
 import jetbrains.buildServer.serverSide.parameters.BuildParametersProvider;
 import jetbrains.buildServer.serverSide.parameters.ParameterDescriptionProvider;
 import org.apache.commons.lang.math.NumberUtils;
@@ -42,6 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -57,8 +57,7 @@ import java.util.TreeSet;
  * @since 1.0.0
  */
 public class BuildNumberPropertiesProvider
-		extends AbstractBuildParametersProvider
-		implements BuildStartContextProcessor, ParameterDescriptionProvider
+		implements BuildParametersProvider, BuildStartContextProcessor, ParameterDescriptionProvider
 {
 	private static final Logger logger = Logger.getInstance("jetbrains.buildServer.PLUGIN.sharedBuildNumber.PROVIDER");
 
@@ -90,6 +89,13 @@ public class BuildNumberPropertiesProvider
 		for(int id : this.configurationService.getAllSharedBuildNumberIds())
 			parameters.add(BuildNumberPropertiesProvider.PARAMETER_PREFIX + id);
 		return parameters;
+	}
+
+	@NotNull
+	@Override
+	public Map<String, String> getParameters(@NotNull SBuild build, boolean emulationMode)
+	{
+		return build.getParametersProvider().getAll();
 	}
 
 	@Override

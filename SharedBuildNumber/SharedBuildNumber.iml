@@ -71,6 +71,15 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libraries/provided/org.joda.time-1.5.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="module" module-name="TeamCityPlugins" scope="PROVIDED" />
     <orderEntry type="module-library">
       <library>
@@ -90,10 +99,10 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libraries/compile/org.joda.time-1.5.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/libraries/test-runtime/org.jdom-1.1.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -102,25 +111,7 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libraries/runtime/net.sf.cglib-2.2.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libraries/runtime/org.jdom-1.1.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libraries/runtime/gnu.trove.jar!/" />
+          <root url="jar://$MODULE_DIR$/libraries/test-runtime/gnu.trove.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
