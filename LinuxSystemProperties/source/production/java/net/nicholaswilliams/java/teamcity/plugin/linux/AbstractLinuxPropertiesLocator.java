@@ -1,5 +1,5 @@
 /*
- * AbstractLinuxPropertiesLocator.java from TeamCityPlugins modified Wednesday, September 12, 2012 17:29:20 CDT (-0500).
+ * AbstractLinuxPropertiesLocator.java from TeamCityPlugins modified Friday, September 21, 2012 23:48:37 CDT (-0500).
  *
  * Copyright 2010-2012 the original author or authors.
  *
@@ -22,6 +22,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
@@ -58,9 +59,11 @@ public abstract class AbstractLinuxPropertiesLocator implements LinuxPropertiesL
 			if(versionFile.canRead())
 			{
 				Properties versionProperties = new Properties();
+				FileInputStream stream = null;
 				try
 				{
-					versionProperties.load(FileUtils.openInputStream(versionFile));
+					stream = FileUtils.openInputStream(versionFile);
+					versionProperties.load(stream);
 					if(versionProperties.getProperty(LinuxPropertiesLocator.PLUGIN_VERSION_KEY) != null)
 					{
 						properties.put(
@@ -74,6 +77,18 @@ public abstract class AbstractLinuxPropertiesLocator implements LinuxPropertiesL
 					AbstractLinuxPropertiesLocator.logger.error(
 							"linux-system-properties plugin version file could not be read.", e
 					);
+				}
+				finally
+				{
+					try
+					{
+						if(stream != null)
+							stream.close();
+					}
+					catch(IOException e)
+					{
+						AbstractLinuxPropertiesLocator.logger.warn("Unable to close version file after reading.", e);
+					}
 				}
 			}
 			else
