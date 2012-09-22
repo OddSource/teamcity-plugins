@@ -1,5 +1,5 @@
 /*
- * PluginConfigurationServiceDefault.java from TeamCityPlugins modified Friday, September 7, 2012 22:43:27 CDT (-0500).
+ * PluginConfigurationServiceDefault.java from TeamCityPlugins modified Friday, September 21, 2012 23:58:49 CDT (-0500).
  *
  * Copyright 2010-2012 the original author or authors.
  *
@@ -40,9 +40,11 @@ import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -484,13 +486,33 @@ public class PluginConfigurationServiceDefault implements PluginConfigurationSer
 			PluginConfigurationServiceDefault.logger.debug("Initializing the XML digester.");
 
 		Schema schema;
+		FileInputStream stream = null;
 		try
 		{
-			schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(this.xsdFile);
+			stream = FileUtils.openInputStream(this.xsdFile);
+			schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(
+					new StreamSource(stream)
+			);
 		}
 		catch(SAXException e)
 		{
 			throw new FatalBeanException("Could not parse plugin configuration XSD", e);
+		}
+		catch(IOException e)
+		{
+			throw new FatalBeanException("Could not parse plugin configuration XSD", e);
+		}
+		finally
+		{
+			try
+			{
+				if(stream != null)
+					stream.close();
+			}
+			catch(IOException e)
+			{
+				PluginConfigurationServiceDefault.logger.warn("Failed to close XSD file stream.", e);
+			}
 		}
 
 		this.digesterLoader.setNamespaceAware(true);
