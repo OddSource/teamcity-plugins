@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ teamcity-build.xml from TeamCityPlugins modified Friday, September 21, 2012 22:41:57 CDT (-0500).
+  ~ teamcity-build.xml from TeamCityPlugins modified Friday, September 21, 2012 23:02:02 CDT (-0500).
   ~
   ~ Copyright 2010-2012 the original author or authors.
   ~
@@ -202,9 +202,9 @@
 		<copy file="${directory.module.resources}/version.properties" todir="${directory.output.artifact.module}" />
 
 		<replace file="${directory.output.artifact.module}/teamcity-plugin.xml" token="{linuxsystemproperties.version}"
-				 value="${linuxsystemproperties.version.without.build}" failonnoreplacements="true" />
+				 value="${linuxsystemproperties.version.without.build}" summary="true" failonnoreplacements="true" />
 		<replace file="${directory.output.artifact.module}/version.properties" token="{linuxsystemproperties.version}"
-				 value="${linuxsystemproperties.version}" failonnoreplacements="true" />
+				 value="${linuxsystemproperties.version}" summary="true" failonnoreplacements="true" />
 	</target>
 
 	<target name="private.package.agent" description="Package the agent plugin"
