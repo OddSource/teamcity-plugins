@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ teamcity-build.xml from TeamCityPlugins modified Friday, September 21, 2012 22:29:27 CDT (-0500).
+  ~ teamcity-build.xml from TeamCityPlugins modified Friday, September 21, 2012 23:01:40 CDT (-0500).
   ~
   ~ Copyright 2010-2012 the original author or authors.
   ~
@@ -202,7 +202,7 @@
 		<copy file="${directory.module.resources}/teamcity-plugin.xml" todir="${directory.output.artifact.module}" />
 
 		<replace file="${directory.output.artifact.module}/teamcity-plugin.xml" token="{sharedbuildnumber.version}"
-				 value="${sharedbuildnumber.version.without.build}" failonnoreplacements="true" />
+				 value="${sharedbuildnumber.version.without.build}" summary="true" failonnoreplacements="true" />
 	</target>
 
 	<target name="private.package.server" description="Package the server plugin"
