@@ -1,5 +1,5 @@
 /*
- * PluginConfigurationServiceDefault.java from TeamCityPlugins modified Friday, September 21, 2012 23:58:49 CDT (-0500).
+ * PluginConfigurationServiceDefault.java from TeamCityPlugins modified Saturday, September 22, 2012 00:04:00 CDT (-0500).
  *
  * Copyright 2010-2012 the original author or authors.
  *
@@ -537,9 +537,11 @@ public class PluginConfigurationServiceDefault implements PluginConfigurationSer
 	{
 		PluginConfigurationServiceDefault.logger.info("Loading the plugin configuration from the XML file.");
 
+		FileInputStream stream = null;
 		try
 		{
-			this.configuration = this.newDigester().parse(this.configFile);
+			stream = FileUtils.openInputStream(this.configFile);
+			this.configuration = this.newDigester().parse(stream);
 		}
 		catch(IOException e)
 		{
@@ -552,6 +554,18 @@ public class PluginConfigurationServiceDefault implements PluginConfigurationSer
 		catch(ParserConfigurationException e)
 		{
 			throw new FatalBeanException("Could not configure the configuration XML parser", e);
+		}
+		finally
+		{
+			try
+			{
+				if(stream != null)
+					stream.close();
+			}
+			catch(IOException e)
+			{
+				PluginConfigurationServiceDefault.logger.warn("Failed to close configuration XML file.", e);
+			}
 		}
 	}
 
