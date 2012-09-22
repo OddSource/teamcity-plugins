@@ -1,5 +1,5 @@
 /*
- * TestPluginConfigurationServiceDefault.java from TeamCityPlugins modified Saturday, September 15, 2012 11:41:35 CDT (-0500).
+ * TestPluginConfigurationServiceDefault.java from TeamCityPlugins modified Friday, September 21, 2012 23:37:46 CDT (-0500).
  *
  * Copyright 2010-2012 the original author or authors.
  *
@@ -939,8 +939,8 @@ public class TestPluginConfigurationServiceDefault
 		File xml = new File(TestPluginConfigurationServiceDefault.workingDirectory,
 							PluginConfigurationService.CONFIG_XML_FILE_NAME);
 
-		assertFalse("The XSD file should not exist yet.", xsd.exists());
-		assertFalse("The XML file should not exist yet.", xml.exists());
+		assertFalse("The XSD file [" + xsd.getCanonicalPath() + "] should not exist yet.", xsd.exists());
+		assertFalse("The XML file [" + xml.getCanonicalPath() + "] should not exist yet.", xml.exists());
 
 		replay(this.service);
 
@@ -1016,23 +1016,10 @@ public class TestPluginConfigurationServiceDefault
 		}
 		finally
 		{
-			try
-			{
+			if(xsd.exists())
 				FileUtils.forceDelete(xsd);
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace();
-			}
-
-			try
-			{
+			if(xml.exists())
 				FileUtils.forceDelete(xml);
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace();
-			}
 		}
 	}
 
@@ -1044,8 +1031,8 @@ public class TestPluginConfigurationServiceDefault
 		File xml = new File(TestPluginConfigurationServiceDefault.workingDirectory,
 							PluginConfigurationService.CONFIG_XML_FILE_NAME);
 
-		assertFalse("The XSD file should not exist yet.", xsd.exists());
-		assertFalse("The XML file should not exist yet.", xml.exists());
+		assertFalse("The XSD file [" + xsd.getCanonicalPath() + "] should not exist yet.", xsd.exists());
+		assertFalse("The XML file [" + xml.getCanonicalPath() + "] should not exist yet.", xml.exists());
 
 		replay(this.service);
 
@@ -1079,24 +1066,10 @@ public class TestPluginConfigurationServiceDefault
 		}
 		finally
 		{
-			try
-			{
+			if(xsd.exists())
 				FileUtils.forceDelete(xsd);
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace();
-			}
-
-			try
-			{
-				if(xml.exists())
-					FileUtils.forceDelete(xml);
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace();
-			}
+			if(xml.exists())
+				FileUtils.forceDelete(xml);
 		}
 	}
 
@@ -1108,8 +1081,8 @@ public class TestPluginConfigurationServiceDefault
 		File xml = new File(TestPluginConfigurationServiceDefault.workingDirectory,
 							PluginConfigurationService.CONFIG_XML_FILE_NAME);
 
-		assertFalse("The XSD file should not exist yet.", xsd.exists());
-		assertFalse("The XML file should not exist yet.", xml.exists());
+		assertFalse("The XSD file [" + xsd.getCanonicalPath() + "] should not exist yet.", xsd.exists());
+		assertFalse("The XML file [" + xml.getCanonicalPath() + "] should not exist yet.", xml.exists());
 
 		replay(this.service);
 
@@ -1143,23 +1116,10 @@ public class TestPluginConfigurationServiceDefault
 		}
 		finally
 		{
-			try
-			{
+			if(xsd.exists())
 				FileUtils.forceDelete(xsd);
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace();
-			}
-
-			try
-			{
+			if(xml.exists())
 				FileUtils.forceDelete(xml);
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace();
-			}
 		}
 	}
 
@@ -1175,8 +1135,8 @@ public class TestPluginConfigurationServiceDefault
 		File xml = new File(TestPluginConfigurationServiceDefault.workingDirectory,
 							PluginConfigurationService.CONFIG_XML_FILE_NAME);
 
-		assertFalse("The XSD file should not exist yet.", xsd.exists());
-		assertFalse("The XML file should not exist yet.", xml.exists());
+		assertFalse("The XSD file [" + xsd.getCanonicalPath() + "] should not exist yet.", xsd.exists());
+		assertFalse("The XML file [" + xml.getCanonicalPath() + "] should not exist yet.", xml.exists());
 
 		try
 		{
@@ -1234,23 +1194,10 @@ public class TestPluginConfigurationServiceDefault
 		}
 		finally
 		{
-			try
-			{
+			if(xsd.exists())
 				FileUtils.forceDelete(xsd);
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace();
-			}
-
-			try
-			{
+			if(xml.exists())
 				FileUtils.forceDelete(xml);
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace();
-			}
 		}
 	}
 }
