@@ -1,5 +1,5 @@
 /*
- * TestBuildNumberPropertiesProvider.java from TeamCityPlugins modified Wednesday, September 12, 2012 21:22:31 CDT (-0500).
+ * TestBuildNumberPropertiesProvider.java from TeamCityPlugins modified Friday, September 21, 2012 23:40:20 CDT (-0500).
  *
  * Copyright 2010-2012 the original author or authors.
  *
@@ -195,7 +195,7 @@ public class TestBuildNumberPropertiesProvider
 	{
 		replay(this.service);
 
-		assertFalse("The return value should be false.", this.provider.isVisible("bad.parameter"));
+		assertTrue("The return value should be true.", this.provider.isVisible("some.other.parameter"));
 	}
 
 	@Test
