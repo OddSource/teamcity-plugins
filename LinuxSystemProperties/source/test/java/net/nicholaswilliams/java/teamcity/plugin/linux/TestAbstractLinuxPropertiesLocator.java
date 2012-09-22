@@ -1,5 +1,5 @@
 /*
- * TestAbstractLinuxPropertiesLocator.java from TeamCityPlugins modified Wednesday, September 12, 2012 17:34:18 CDT (-0500).
+ * TestAbstractLinuxPropertiesLocator.java from TeamCityPlugins modified Friday, September 21, 2012 23:44:45 CDT (-0500).
  *
  * Copyright 2010-2012 the original author or authors.
  *
@@ -52,9 +52,12 @@ public class TestAbstractLinuxPropertiesLocator
 	}
 
 	@Test
-	public void testLocateProperties01()
+	public void testLocateProperties01() throws IOException
 	{
 		File pluginRoot = new File(".");
+		File versionFile = new File(pluginRoot, "version.properties");
+
+		assertFalse("The file [" + versionFile.getCanonicalPath() + "] should not exist.", versionFile.exists());
 
 		final Capture<Map<String, String>> capture = new Capture<Map<String, String>>();
 
