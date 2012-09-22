@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ teamcity-build.xml from TeamCityPlugins modified Friday, September 21, 2012 22:10:38 CDT (-0500).
+  ~ teamcity-build.xml from TeamCityPlugins modified Friday, September 21, 2012 22:29:27 CDT (-0500).
   ~
   ~ Copyright 2010-2012 the original author or authors.
   ~
@@ -245,6 +245,8 @@
 				<include name="NOTICE.txt" />
 			</zipfileset>
 		</zip>
+		<checksum file="${directory.output.artifact.module}/${zip.name.plugin}" algorithm="md5" />
+		<checksum file="${directory.output.artifact.module}/${zip.name.plugin}" algorithm="sha1" />
 	</target>
 
 	<!-- Public Build Definitions -->
