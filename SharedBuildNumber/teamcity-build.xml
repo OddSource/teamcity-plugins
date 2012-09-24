@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ teamcity-build.xml from TeamCityPlugins modified Monday, September 24, 2012 15:53:29 CDT (-0500).
+  ~ teamcity-build.xml from TeamCityPlugins modified Monday, September 24, 2012 15:55:21 CDT (-0500).
   ~
   ~ Copyright 2010-2012 the original author or authors.
   ~
@@ -129,7 +129,7 @@
 
 		<property name="jar.name.server" value="shared-build-number.jar" />
 
-		<property name="zip.name.plugin" value="shared-build-number.zip" />
+		<property name="zip.name.plugin" value="shared-build-number-${sharedbuildnumber.version.without.build}.zip" />
 
 		<echo message="Running JRE version is ${ant.java.version}" />
 		<echo message="Specified JDK version is ${java.jvm.version}" />
