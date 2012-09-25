@@ -26,15 +26,6 @@
     <orderEntry type="module-library" exported="" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libraries/provided/teamcity-openapi-7.1.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="" scope="PROVIDED">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/libraries/provided/teamcity-server-api-7.1.0.jar!/" />
         </CLASSES>
         <JAVADOC />
